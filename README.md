@@ -3,6 +3,8 @@
 App Android de séances de sport en circuit : exercices animés, chrono ou répétitions, cycles, repos,
 annonces vocales, historique et partage de séances par QR code. Sans compte, sans pub, tout reste sur le téléphone.
 
+Vibe codé avec amour ❤️
+
 <p align="center">
   <img src="docs/screenshots/accueil.png" width="250" alt="Accueil : séances, nombre de cycles, historique de la semaine">
   <img src="docs/screenshots/seance-chrono.png" width="250" alt="Séance en mode Chrono : exercice animé et compte à rebours">
@@ -92,3 +94,7 @@ Les notes de chaque version sont dans `app/src/main/assets/release-notes/<versio
 | `app/src/main/java/fr/loic/seances/ui` | Écrans Compose et thèmes |
 | `app/src/main/java/fr/loic/seances/update` | Mises à jour depuis les releases GitHub, « Quoi de neuf » |
 | `app/src/test` | Tests unitaires et captures d'écran |
+
+## Licence
+
+[MIT](LICENSE) : tu peux utiliser, modifier et redistribuer le code librement, en gardant la mention de licence.
