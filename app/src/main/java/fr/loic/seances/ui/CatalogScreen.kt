@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,6 +70,7 @@ fun CatalogScreen(
     val context = LocalContext.current
     var query by remember { mutableStateOf("") }
     var muscle by remember { mutableStateOf<Muscle?>(null) }
+    var place by remember { mutableIntStateOf(0) } // 0 = tout, 1 = sans machine, 2 = salle
     var detail by remember { mutableStateOf<ExerciseDef?>(null) }
     var editing by remember { mutableStateOf<Pair<ExerciseDef, Boolean>?>(null) } // (brouillon, nouveau ?)
 
@@ -94,6 +96,7 @@ fun CatalogScreen(
     val q = query.trim().normalized()
     val filtered = all
         .filter { muscle == null || it.muscle == muscle }
+        .filter { place == 0 || (place == 2) == it.gym }
         .filter { q.isEmpty() || it.name.normalized().contains(q) }
         .sortedWith(compareBy({ it.muscle.ordinal }, { it.name.normalized() }))
     val grouped = filtered.groupBy { it.muscle }
@@ -119,7 +122,7 @@ fun CatalogScreen(
                 style = titleStyle(30), color = Palette.text,
             )
             Text(
-                "${all.size} exercices · poids du corps, haltères, chaise" +
+                "${all.size} exercices · poids du corps, haltères, chaise, machines de salle" +
                     if (onPick != null) " · touche un exercice pour l'ajouter" else "",
                 color = Palette.textMuted, fontSize = 13.sp,
             )
@@ -133,6 +136,8 @@ fun CatalogScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             Spacer(Modifier.height(8.dp))
+            TextChips(listOf("Tout", "Sans machine", "Salle"), place) { place = it }
+            Spacer(Modifier.height(4.dp))
             MuscleChips(muscle, { muscle = it })
             Spacer(Modifier.height(4.dp))
         }

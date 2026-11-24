@@ -159,9 +159,11 @@ class MainActivity : ComponentActivity() {
                             cycles = cycles,
                             initialMuscles = settings.randomMuscles,
                             initialPerBlock = settings.randomPerBlock,
-                            onChoiceChange = { m, n ->
+                            initialGym = settings.randomGym,
+                            onChoiceChange = { m, n, gym ->
                                 settings.randomMuscles = m
                                 settings.randomPerBlock = n
+                                settings.randomGym = gym
                             },
                             onStart = ::startWorkout,
                             onSave = {

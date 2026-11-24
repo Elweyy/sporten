@@ -30,8 +30,8 @@ android {
         applicationId = "fr.loic.seances"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "1.10"
+        versionCode = 12
+        versionName = "1.11"
     }
 
     signingConfigs {
@@ -102,3 +102,12 @@ dependencies {
     testImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+// Après chaque build release, copie l'APK (signé avec la clé des releases) à la racine sous le nom Sporten.apk.
+// Pas l'APK debug : signé avec une autre clé, il ne pourrait pas remplacer l'app installée depuis GitHub.
+val copyApkToRoot by tasks.registering {
+    val src = layout.buildDirectory.file("outputs/apk/release/app-release.apk")
+    val dst = rootProject.layout.projectDirectory.file("Sporten.apk")
+    doLast { src.get().asFile.copyTo(dst.asFile, overwrite = true) }
+}
+tasks.matching { it.name == "assembleRelease" }.configureEach { finalizedBy(copyApkToRoot) }

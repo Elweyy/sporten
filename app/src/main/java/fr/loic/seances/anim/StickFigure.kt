@@ -44,6 +44,31 @@ sealed interface Prop {
 
     /** Mur vertical à l'abscisse [x]. */
     data class Wall(val x: Float) : Prop
+
+    /** Trait fixe (cadre de machine, banc, barre, rail…). */
+    data class Line(val x1: Float, val y1: Float, val x2: Float, val y2: Float, val width: Float = 2f) : Prop
+
+    /** Cercle fixe, contour seul (poulie, roue). */
+    data class Circle(val x: Float, val y: Float, val r: Float, val width: Float = 1.6f) : Prop
+
+    /**
+     * Trait entre un point fixe et une articulation qui bouge : câble de poulie (fin)
+     * ou bras de levier d'une machine (épais).
+     */
+    data class Link(val x: Float, val y: Float, val to: JointRef, val width: Float = 1f) : Prop
+}
+
+/** Articulation à laquelle un [Prop.Link] est accroché. */
+enum class JointRef { N_HAND, F_HAND, N_ELBOW, F_ELBOW, N_FOOT, F_FOOT, N_KNEE }
+
+fun Joints.get(ref: JointRef): Offset = when (ref) {
+    JointRef.N_HAND -> nHand
+    JointRef.F_HAND -> fHand
+    JointRef.N_ELBOW -> nElbow
+    JointRef.F_ELBOW -> fElbow
+    JointRef.N_FOOT -> nFoot
+    JointRef.F_FOOT -> fFoot
+    JointRef.N_KNEE -> nKnee
 }
 
 enum class Weight {
@@ -106,16 +131,16 @@ data class ExerciseAnimation(
     }
 }
 
-private const val TORSO = 30f
+internal const val TORSO = 30f
 private const val NECK_TO_HEAD = 8.5f
 private const val HEAD_R = 6f
-private const val UPPER_ARM = 14f
-private const val FOREARM = 13f
-private const val THIGH = 18f
-private const val SHIN = 18f
+internal const val UPPER_ARM = 14f
+internal const val FOREARM = 13f
+internal const val THIGH = 18f
+internal const val SHIN = 18f
 private const val SHOULDER_HALF = 7f
 private const val HIP_HALF = 4f
-private const val GROUND_Y = 90f
+internal const val GROUND_Y = 90f
 private const val VIEW_SIZE = 108f
 
 /** Positions des articulations dans la boîte 100 x 100. */
@@ -270,6 +295,16 @@ private fun DrawScope.drawFigure(
             }
             is Prop.Wall -> drawLine(
                 propColor, pt(Offset(prop.x, -6f)), pt(Offset(prop.x, GROUND_Y + 2.2f)), strokeWidth = 2.4f * s,
+            )
+            is Prop.Line -> drawLine(
+                propColor, pt(Offset(prop.x1, prop.y1)), pt(Offset(prop.x2, prop.y2)),
+                strokeWidth = prop.width * s, cap = StrokeCap.Round,
+            )
+            is Prop.Circle -> drawCircle(
+                propColor, radius = prop.r * s, center = pt(Offset(prop.x, prop.y)), style = Stroke(prop.width * s),
+            )
+            is Prop.Link -> drawLine(
+                propColor, pt(Offset(prop.x, prop.y)), pt(j.get(prop.to)), strokeWidth = prop.width * s, cap = StrokeCap.Round,
             )
         }
     }

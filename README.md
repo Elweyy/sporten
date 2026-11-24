@@ -20,9 +20,10 @@ Vibe codé avec amour ❤️
   - **🔢 Répétitions** : un nombre de reps par exercice, on touche **✓ Fait** pour passer à la suite.
 - **Super séance** : enchaîne plusieurs séances à la suite (par exemple la séance 1 puis la séance 2),
   avec une pause entre les deux.
-- **Catalogue** de près de 90 exercices animés (poids du corps, haltères, chaise, salle), par groupe musculaire,
+- **Catalogue** de plus de 100 exercices animés (poids du corps, haltères, chaise, machines de salle), par groupe musculaire,
   et exercices perso.
 - **Séance aléatoire** à partir des groupes musculaires choisis.
+- **Filtre Maison / Salle** pour le catalogue et la séance aléatoire.
 - **Partage** d'une séance par QR code ou code texte, import en le scannant ou en le collant.
 - **Historique** : calendrier, séries de semaines, records, muscles travaillés, et résumé à copier dans Strava.
 - Annonces vocales, écran toujours allumé, chrono qui continue écran éteint, plusieurs thèmes de couleurs.

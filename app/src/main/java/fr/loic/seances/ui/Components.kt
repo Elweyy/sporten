@@ -86,6 +86,15 @@ fun MuscleChips(selected: Muscle?, onSelect: (Muscle?) -> Unit, allowAll: Boolea
     }
 }
 
+/** Choix unique parmi quelques libellés (ex. Maison / Salle). */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun TextChips(labels: List<String>, selected: Int, onSelect: (Int) -> Unit) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        labels.forEachIndexed { i, l -> Chip(l, selected == i) { onSelect(i) } }
+    }
+}
+
 @Composable
 private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
     FilterChip(
@@ -141,7 +150,7 @@ fun ExerciseRow(
         Column(Modifier.weight(1f)) {
             Text(ex.name, color = Palette.text, fontSize = 15.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Text(
-                ex.muscle.label + if (ex.custom) " · perso" else "",
+                ex.muscle.label + (if (ex.custom) " · perso" else "") + (if (ex.gym) " · salle" else ""),
                 color = Palette.textMuted, fontSize = 12.sp,
             )
         }

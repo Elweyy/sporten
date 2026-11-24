@@ -18,7 +18,10 @@ enum class Muscle(val label: String) {
     CARDIO("Cardio"),
 }
 
-/** Un exercice du catalogue. Les exercices perso ont [custom] = true. */
+/**
+ * Un exercice du catalogue. Les exercices perso ont [custom] = true.
+ * [gym] = true : exercice de salle (machine, poulie, barre, banc), écarté des séances « Maison ».
+ */
 @Serializable
 data class ExerciseDef(
     val id: String,
@@ -27,6 +30,7 @@ data class ExerciseDef(
     val muscle: Muscle,
     val animId: String,
     val custom: Boolean = false,
+    val gym: Boolean = false,
 )
 
 /**
@@ -204,6 +208,11 @@ class SettingsStore(context: Context) {
     var randomPerBlock: Int
         get() = prefs.getInt("randomPerBlock", 3)
         set(v) = prefs.edit().putInt("randomPerBlock", v).apply()
+
+    /** Séance aléatoire « Salle » (machines comprises) plutôt que « Maison ». */
+    var randomGym: Boolean
+        get() = prefs.getBoolean("randomGym", false)
+        set(v) = prefs.edit().putBoolean("randomGym", v).apply()
 
     /** Durées proposées pour une nouvelle séance. */
     var durations: Durations

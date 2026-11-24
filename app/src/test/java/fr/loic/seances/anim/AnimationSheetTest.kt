@@ -21,6 +21,9 @@ class AnimationSheetTest {
                 when (p) {
                     is Prop.Chair -> "chair:${p.x}:${p.seatY}:${p.width}:${p.backLeft}"
                     is Prop.Wall -> "wall:${p.x}"
+                    is Prop.Line -> "line:${p.x1}:${p.y1}:${p.x2}:${p.y2}:${p.width}"
+                    is Prop.Circle -> "circle:${p.x}:${p.y}:${p.r}:${p.width}"
+                    is Prop.Link -> "link:${p.x}:${p.y}:${p.to}:${p.width}"
                 }
             }
             sb.append("EX|${ex.label}|${a.view}|${a.weight}|${a.ground}|$props|${a.weightBothHands}|${ex.id}\n")

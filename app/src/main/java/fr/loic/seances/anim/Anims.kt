@@ -717,7 +717,7 @@ object Anims {
         Entry("kb_swing", "Swing kettlebell", kbSwing),
         Entry("ball_slam", "Slam medecine ball", ballSlam),
         Entry("chin_up", "Traction", chinUp),
-    )
+    ) + GymAnims.entries
 
     private val byId = entries.associateBy { it.id }
 

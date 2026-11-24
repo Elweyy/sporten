@@ -9,13 +9,22 @@ import fr.loic.seances.data.Muscle.JAMBES
 import fr.loic.seances.data.Muscle.PECTORAUX
 
 /**
- * Exercices fournis avec l'app : poids du corps, haltères courts, chaise, sol.
+ * Exercices fournis avec l'app : poids du corps, haltères courts, chaise, sol, et les machines
+ * les plus courantes en salle (marquées [ExerciseDef.gym]).
  * Les identifiants ne doivent jamais changer (ils sont référencés dans les sauvegardes).
  */
 object Catalog {
 
     private fun ex(id: String, name: String, muscle: Muscle, cue: String, animId: String = id) =
         ExerciseDef(id, name, cue, muscle, animId)
+
+    /** Exercice de salle (machine, poulie, barre, banc). */
+    private fun gym(id: String, name: String, muscle: Muscle, cue: String) =
+        ExerciseDef(id, name, cue, muscle, id, gym = true)
+
+    /** Exercice de salle qui réutilise l'animation d'un autre exercice. */
+    private fun gymEx(id: String, name: String, muscle: Muscle, cue: String, animId: String) =
+        ExerciseDef(id, name, cue, muscle, animId, gym = true)
 
     val builtIn: List<ExerciseDef> = listOf(
         // Épaules
@@ -157,51 +166,45 @@ object Catalog {
             "Assis sur un banc, pieds à plat : explose vers le haut sans élan et retombe debout, genoux souples.", "jump_squat"),
         ex("pogo_hops", "Pogo hops", CARDIO,
             "Petits sauts rapides sur la pointe des pieds, jambes presque tendues : rebondis comme un ressort.", "pogo_hop"),
-        ex("plate_hops", "Alternating plate hops", CARDIO,
+        gymEx("plate_hops", "Alternating plate hops", CARDIO,
             "Un disque posé au sol : saute dessus d'un pied puis de l'autre en alternant, vite et léger.", "pogo_hop"),
         ex("lateral_step_out", "Lateral step out to balance", JAMBES,
             "Saute sur le côté sur une jambe et stabilise-toi 2 secondes, genou au-dessus du pied. Alterne.", "side_lunge"),
         ex("sl_bench_hop", "SL bench assisted hop", JAMBES,
             "Une main sur un banc, saute sur une seule jambe avec l'aide du bras : réception amortie. Change de jambe à mi-temps.", "pogo_hop"),
-        ex("kb_swings", "KB swings", JAMBES,
+        gymEx("kb_swings", "KB swings", JAMBES,
             "Charnière de hanche, kettlebell entre les jambes : claque les hanches vers l'avant, la cloche monte à hauteur d'épaules.", "kb_swing"),
-        ex("stiff_leg_box_jump", "Stiff leg low box jump", JAMBES,
+        gymEx("stiff_leg_box_jump", "Stiff leg low box jump", JAMBES,
             "Saute sur une box basse avec les chevilles seulement, genoux presque tendus : contact au sol très court.", "pogo_hop"),
         ex("front_squat", "Front squat", JAMBES,
             "Barre ou haltères posés devant les épaules, coudes hauts : descends buste droit, cuisses parallèles.", "dumbbell_squat"),
-        ex("zercher_good_morning", "Zercher b-stance good morning", JAMBES,
+        gymEx("zercher_good_morning", "Zercher b-stance good morning", JAMBES,
             "Charge dans le creux des coudes, un pied en retrait sur la pointe : bascule le buste en poussant les fesses en arrière.", "good_morning"),
-        ex("sl_knee_drive", "SL banded explosive knee drive", JAMBES,
+        gymEx("sl_knee_drive", "SL banded explosive knee drive", JAMBES,
             "Élastique au pied, sur une jambe : monte le genou vers la poitrine de façon explosive, bras opposé actif. Change de jambe à mi-temps.", "high_knees"),
-        ex("zercher_curtsy_lunge", "Zercher landmine curtsy lunge", JAMBES,
+        gymEx("zercher_curtsy_lunge", "Zercher landmine curtsy lunge", JAMBES,
             "Bout de la barre landmine dans les coudes : recule une jambe en croisant derrière l'autre, genou vers le sol. Alterne.", "lunge"),
-        ex("hip_thrust", "Hip thrust", JAMBES,
-            "Haut du dos sur un banc, barre sur les hanches : monte le bassin jusqu'à l'horizontale, serre les fessiers en haut.", "glute_bridge"),
-        ex("kickback_45", "45° kick-back", JAMBES,
+        gymEx("kickback_45", "45° kick-back", JAMBES,
             "Buste incliné à 45°, appui sur une jambe : pousse l'autre talon vers l'arrière et le haut en serrant le fessier.", "donkey_kick"),
-        ex("seated_leg_curl", "Seated leg curl", JAMBES,
+        gymEx("seated_leg_curl", "Seated leg curl", JAMBES,
             "Assis à la machine, boudin sur les chevilles : ramène les talons sous le siège, remonte lentement.", "wall_sit"),
         ex("sissy_squat", "Sissy squat", JAMBES,
             "Talons levés, tiens un support : pousse les genoux vers l'avant en basculant le buste en arrière, hanches tendues.", "wall_sit"),
         ex("tibialis_raise", "Tibialis raise", JAMBES,
             "Dos au mur, talons à 30 cm : relève les pointes de pieds le plus haut possible, redescends lentement.", "calf_raise"),
-        ex("chin_up", "Chin-up / lat pull down", DOS,
+        gymEx("chin_up", "Chin-up / lat pull down", DOS,
             "Paumes vers toi, bras tendus : tire jusqu'à passer le menton au-dessus de la barre (ou barre de tirage à la poitrine).", "chin_up"),
-        ex("seated_cable_row", "Seated cable row", DOS,
-            "Assis, dos droit, poignée à deux mains : tire vers le nombril en serrant les omoplates, coudes près du corps.", "bent_over_row"),
-        ex("landmine_row", "Landmine SA row", DOS,
+        gymEx("landmine_row", "Landmine SA row", DOS,
             "Buste penché, une main sur le bout de la barre landmine : tire vers la hanche. Change de bras à mi-temps.", "one_arm_row"),
-        ex("face_pull", "Face pull", EPAULES,
-            "Poulie haute avec corde : tire vers le visage en écartant les mains, coudes hauts, omoplates serrées.", "upright_row"),
-        ex("medball_chest_pass", "Lying medecine ball chest pass", PECTORAUX,
+        gymEx("medball_chest_pass", "Lying medecine ball chest pass", PECTORAUX,
             "Couché sur le dos, ballon sur la poitrine : lance-le vers le plafond le plus fort possible, rattrape et enchaîne.", "floor_press"),
-        ex("db_incline_press", "DB incline bench press", PECTORAUX,
+        gymEx("db_incline_press", "DB incline bench press", PECTORAUX,
             "Banc incliné à 30-45°, haltères à hauteur de poitrine : pousse vers le plafond, redescends lentement.", "floor_press"),
-        ex("medball_slam", "Medecine ball slam", CARDIO,
+        gymEx("medball_slam", "Medecine ball slam", CARDIO,
             "Ballon au-dessus de la tête sur la pointe des pieds : lance-le au sol de toutes tes forces en fléchissant les hanches.", "ball_slam"),
-        ex("rotational_slam", "Rotational slam", ABDOS,
+        gymEx("rotational_slam", "Rotational slam", ABDOS,
             "Ballon au-dessus de la tête : pivote le buste et lance-le au sol à côté d'un pied. Alterne les côtés.", "ball_slam"),
-        ex("cable_rotation", "Standing cable rotation", ABDOS,
+        gymEx("cable_rotation", "Standing cable rotation", ABDOS,
             "De profil à la poulie, bras tendus : pivote le buste depuis les hanches, bassin gainé. Change de côté à mi-temps.", "russian_twist"),
         ex("copenhagen_plank", "Copenhagen plank", ABDOS,
             "Gainage latéral, pied du dessus posé sur un banc, l'autre jambe dans le vide : tiens. Change de côté à mi-temps.", "side_plank"),
@@ -209,5 +212,65 @@ object Catalog {
             "Couché, genoux pliés au-dessus des hanches : enroule le bassin pour décoller les fesses, redescends lentement.", "leg_raise"),
         ex("db_rotating_curl", "DB rotating curl", BRAS,
             "Haltères en prise marteau : en montant, tourne les paumes vers le haut, coudes fixes contre le corps.", "alternate_curl"),
+    ) + listOf(
+        // ---------- Salle : machines, poulies, barre, banc ----------
+
+        // Pectoraux
+        gym("bench_press", "Développé couché à la barre", PECTORAUX,
+            "Allongé sur le banc, pieds au sol : descends la barre jusqu'à la poitrine, coudes à 45°, puis pousse."),
+        gym("chest_press", "Presse pectorale (machine)", PECTORAUX,
+            "Dos collé au dossier, poignées à hauteur de poitrine : pousse devant toi sans verrouiller les coudes."),
+        gym("pec_deck", "Butterfly (pec deck)", PECTORAUX,
+            "Avant-bras contre les coussins : ramène les bras devant la poitrine, serre, puis ouvre lentement."),
+        gym("cable_crossover", "Vis-à-vis à la poulie", PECTORAUX,
+            "Poulies hautes, un pas en avant, bras légèrement fléchis : ramène les mains devant le bassin en arc de cercle."),
+
+        // Dos
+        gym("lat_pulldown", "Tirage vertical à la poulie haute", DOS,
+            "Assis, cuisses calées : tire la barre jusqu'au haut de la poitrine en serrant les omoplates, remonte lentement."),
+        gym("seated_cable_row", "Tirage horizontal à la poulie basse", DOS,
+            "Assis, pieds sur la plateforme, dos droit : tire la poignée vers le nombril, coudes le long du corps."),
+        gym("pull_up", "Tractions à la barre fixe", DOS,
+            "Suspendu, mains un peu plus larges que les épaules : monte le menton au-dessus de la barre, redescends bras tendus."),
+        gym("back_extension", "Banc à lombaires", DOS,
+            "Hanches sur le coussin, chevilles calées : descends le buste dos plat, remonte jusqu'à l'alignement, sans cambrer."),
+
+        // Épaules
+        gym("machine_shoulder_press", "Développé épaules à la machine", EPAULES,
+            "Dos contre le dossier, poignées à hauteur d'épaules : pousse vers le haut, redescends jusqu'aux oreilles."),
+        gym("face_pull", "Face pull à la poulie", EPAULES,
+            "Poulie à hauteur de visage, corde en main : tire vers le front en écartant les mains, coudes hauts."),
+
+        // Bras
+        gym("triceps_pushdown", "Extension triceps à la poulie haute", BRAS,
+            "Coudes collés au corps et fixes : pousse la barre ou la corde vers le bas jusqu'à bras tendus."),
+        gym("cable_curl", "Curl à la poulie basse", BRAS,
+            "Debout face à la poulie, coudes fixes : monte la barre vers les épaules, redescends lentement."),
+        gym("bar_dips", "Dips aux barres parallèles", BRAS,
+            "En appui bras tendus, buste légèrement penché : descends jusqu'à 90° aux coudes, puis pousse."),
+
+        // Jambes / fessiers
+        gym("leg_press", "Presse à cuisses", JAMBES,
+            "Dos plaqué, pieds largeur de hanches : descends le plateau genoux vers la poitrine, pousse sans verrouiller."),
+        gym("leg_extension", "Leg extension", JAMBES,
+            "Assis, rouleau sur le bas des tibias : tends les jambes, tiens une seconde, redescends lentement."),
+        gym("leg_curl", "Leg curl allongé", JAMBES,
+            "À plat ventre, rouleau au-dessus des talons : ramène les talons vers les fesses sans décoller le bassin."),
+        gym("barbell_squat", "Squat à la barre", JAMBES,
+            "Barre sur le haut du dos, pieds largeur d'épaules : descends cuisses parallèles, dos droit, remonte en poussant."),
+        gym("hip_thrust", "Hip thrust", JAMBES,
+            "Haut du dos contre le banc, barre sur les hanches : monte le bassin jusqu'à l'horizontale en serrant les fessiers."),
+
+        // Abdos / gainage
+        gym("captain_knee_raise", "Relevés de genoux (chaise romaine)", ABDOS,
+            "Avant-bras sur les appuis, dos contre le dossier : monte les genoux vers la poitrine sans balancer."),
+
+        // Cardio
+        gym("rowing_machine", "Rameur", CARDIO,
+            "Pousse d'abord avec les jambes, puis bascule le buste et tire la poignée vers le bas des côtes. Reviens dans l'ordre inverse."),
+        gym("exercise_bike", "Vélo", CARDIO,
+            "Selle à hauteur de hanche, jambe presque tendue en bas : pédale vite avec une résistance moyenne."),
+        gym("treadmill", "Tapis de course", CARDIO,
+            "Course à allure soutenue, buste droit, foulées courtes. Pense à la clé de sécurité."),
     )
 }

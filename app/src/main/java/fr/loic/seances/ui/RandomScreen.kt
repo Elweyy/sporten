@@ -51,7 +51,8 @@ fun RandomScreen(
     cycles: Int,
     initialMuscles: List<Muscle>,
     initialPerBlock: Int,
-    onChoiceChange: (List<Muscle>, Int) -> Unit,
+    initialGym: Boolean,
+    onChoiceChange: (List<Muscle>, Int, Boolean) -> Unit,
     onStart: (WorkoutPlan) -> Unit,
     onSave: (WorkoutPlan) -> Unit,
     onBack: () -> Unit,
@@ -60,15 +61,20 @@ fun RandomScreen(
     BackHandler(onBack = onBack)
     var muscles by remember { mutableStateOf(initialMuscles) }
     var perBlock by remember { mutableStateOf(initialPerBlock) }
-    fun draw(m: List<Muscle>, n: Int) = if (m.isEmpty()) null else RandomWorkout.generate(exercises, m, n, durations)
-    var plan by remember { mutableStateOf(draw(muscles, perBlock)) }
+    var gym by remember { mutableStateOf(initialGym) }
+    // « Maison » : sans les exercices de salle. « Salle » : tout le catalogue.
+    val pool = if (gym) exercises else exercises.filter { !it.gym }
+    fun draw(m: List<Muscle>, n: Int, g: Boolean) =
+        if (m.isEmpty()) null else RandomWorkout.generate(if (g) exercises else exercises.filter { !it.gym }, m, n, durations)
+    var plan by remember { mutableStateOf(draw(muscles, perBlock, gym)) }
     val byId = remember(exercises) { exercises.associateBy { it.id } }
 
-    fun change(m: List<Muscle>, n: Int) {
+    fun change(m: List<Muscle>, n: Int, g: Boolean = gym) {
         muscles = m.sortedBy { it.ordinal }
         perBlock = n
-        onChoiceChange(muscles, n)
-        plan = draw(muscles, n)
+        gym = g
+        onChoiceChange(muscles, n, g)
+        plan = draw(muscles, n, g)
     }
 
     LazyColumn(modifier, contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -76,6 +82,9 @@ fun RandomScreen(
             TextButton(onClick = onBack) { Text("←  Retour", color = Palette.textMuted) }
             Text("Séance aléatoire", style = titleStyle(30), color = Palette.text)
             Spacer(Modifier.height(8.dp))
+            Text("Où ?", color = Palette.textMuted, fontSize = 13.sp)
+            TextChips(listOf("Maison (sans machine)", "Salle (machines comprises)"), if (gym) 1 else 0) { change(muscles, perBlock, it == 1) }
+            Spacer(Modifier.height(4.dp))
             Text("Groupes musculaires (un bloc par groupe)", color = Palette.textMuted, fontSize = 13.sp)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Muscle.entries.forEach { m ->
@@ -122,7 +131,7 @@ fun RandomScreen(
                         "$count exos · ≈ ${(p.durations.totalSec(cycles, count) + 59) / 60} min en $cycles cycle(s)",
                         Modifier.weight(1f), color = Palette.textMuted, fontSize = 13.sp,
                     )
-                    TextButton(onClick = { plan = draw(muscles, perBlock) }) { Text("🎲  Retirer tout", color = Palette.accentText) }
+                    TextButton(onClick = { plan = draw(muscles, perBlock, gym) }) { Text("🎲  Retirer tout", color = Palette.accentText) }
                 }
             }
             p.blocks.forEachIndexed { bi, block ->
@@ -133,7 +142,7 @@ fun RandomScreen(
                     val ex = byId[id] ?: return@forEachIndexed
                     item(key = "e$bi-$ei-$id") {
                         ExerciseRow(ex) {
-                            IconButton(onClick = { RandomWorkout.reroll(exercises, p, bi, ei)?.let { plan = it } }) {
+                            IconButton(onClick = { RandomWorkout.reroll(pool, p, bi, ei)?.let { plan = it } }) {
                                 Text("↻", fontSize = 20.sp, color = Palette.text)
                             }
                         }
